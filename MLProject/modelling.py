@@ -15,7 +15,7 @@ dagshub.init(
 
 mlflow.set_experiment("CI Training")
 
-df = pd.read_csv("../../Titanic-Dataset_preprocessing.csv")
+df = pd.read_csv("./Titanic-Dataset_preprocessing.csv")
 
 X = df.drop("Survived", axis=1)
 y = df["Survived"]
