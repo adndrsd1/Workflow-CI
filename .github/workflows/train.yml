@@ -24,7 +24,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mlflow pandas scikit-learn joblib
+          pip install mlflow pandas scikit-learn joblib dagshub
 
       - name: Run Training
         run: |
