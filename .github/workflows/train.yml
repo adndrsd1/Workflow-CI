@@ -30,14 +30,14 @@ jobs:
         run: |
           mlflow --version
 
-      - name: Run Training
+      - name: Run MLflow Project
         run: |
           cd MLProject
-          python modelling.py
+          mlflow run . -e main
 
       - name: Save Artifact
         run: |
-          echo "Training selesai $(date)" > artifact.txt
+          echo "Training selesai" > artifact.txt
 
       - name: Commit Artifact
         run: |
