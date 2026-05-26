@@ -1,51 +1,45 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
-import dagshub
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
-dagshub.init(
-    repo_owner='adndrsd1',
-    repo_name='titanic-mlops',
-    mlflow=True
-)
+# AUTLOG
+mlflow.sklearn.autolog()
 
-mlflow.set_experiment("CI Training")
-
-df = pd.read_csv("./Titanic-Dataset_preprocessing.csv")
+# Load dataset
+df = pd.read_csv("../Titanic-Dataset_preprocessing.csv")
 
 X = df.drop("Survived", axis=1)
 y = df["Survived"]
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
+    X,
+    y,
     test_size=0.2,
     random_state=42
 )
 
-with mlflow.start_run():
+# Model
+model = RandomForestClassifier(
+    n_estimators=100,
+    max_depth=5,
+    random_state=42
+)
 
-    model = RandomForestClassifier(
-        n_estimators=100,
-        max_depth=5
-    )
+# Training
+model.fit(X_train, y_train)
 
-    model.fit(X_train, y_train)
+# Prediction
+preds = model.predict(X_test)
 
-    preds = model.predict(X_test)
+# Accuracy
+acc = accuracy_score(y_test, preds)
 
-    acc = accuracy_score(y_test, preds)
+# Log metric tambahan
+mlflow.log_metric("accuracy", acc)
 
-    mlflow.log_param("n_estimators", 100)
-    mlflow.log_param("max_depth", 5)
-    mlflow.log_metric("accuracy", acc)
-
-    mlflow.sklearn.log_model(
-        model,
-        "model"
-    )
-
+print("Accuracy:", acc)
 print("Training CI selesai")
