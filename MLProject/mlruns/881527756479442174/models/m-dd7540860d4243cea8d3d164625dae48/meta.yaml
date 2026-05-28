@@ -1,0 +1,10 @@
+artifact_location: file:D:/SMSML_Adinda Rizki Sya'bana Diva/Workflow-CI/MLProject/mlruns/881527756479442174/models/m-dd7540860d4243cea8d3d164625dae48/artifacts
+creation_timestamp: 1779973481354
+experiment_id: '881527756479442174'
+last_updated_timestamp: 1779973488874
+model_id: m-dd7540860d4243cea8d3d164625dae48
+model_type: null
+name: model
+source_run_id: d86412b40c5f400e9b5b8320413c4bba
+status: 2
+status_message: null
