@@ -2,21 +2,12 @@ import pandas as pd
 import mlflow
 import mlflow.sklearn
 import os
-
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
+# Hubungkan path file dataset secara aman menggunakan relative path dinamis
 current_dir = os.path.dirname(os.path.abspath(__file__))
-mlruns_path = os.path.join(current_dir, "mlruns")
-mlflow.set_tracking_uri(f"file:{mlruns_path}")
-
-mlflow.set_experiment("CI Training")
-
-mlflow.sklearn.autolog(
-    log_models=True
-)
-
 df = pd.read_csv(os.path.join(current_dir, "../Titanic-Dataset_preprocessing.csv"))
 
 X = df.drop("Survived", axis=1)
@@ -29,18 +20,30 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-with mlflow.start_run(nested=True):
+# HAPUS BARIS: mlflow.set_tracking_uri(...) 
+# HAPUS BARIS: mlflow.set_experiment(...)
+# Biarkan parameter tracking diatur secara otomatis oleh file manifes MLproject
 
-    model = RandomForestClassifier(
-        n_estimators=100,
-        max_depth=5,
-        random_state=42
-    )
+# Aktifkan perekaman metrik otomatis dari scikit-learn
+mlflow.sklearn.autolog(log_models=True)
 
-    model.fit(X_train, y_train)
-    preds = model.predict(X_test)
-    acc = accuracy_score(y_test, preds)
-    mlflow.log_metric("accuracy", acc)
-    print("Accuracy:", acc)
+# ========================================================
+# PROSES TRAINING & EVALUASI
+# ========================================================
+model = RandomForestClassifier(
+    n_estimators=100,
+    max_depth=5,
+    random_state=42
+)
 
-print("Training selesai")
+# Tarik proses pelatihan (Metrik akurasi otomatis direkam oleh autolog)
+model.fit(X_train, y_train)
+
+# Prediksi komponen test
+preds = model.predict(X_test)
+acc = accuracy_score(y_test, preds)
+
+print("====================================")
+print("Accuracy via MLflow CLI:", acc)
+print("Training selesai dengan sukses!")
+print("====================================")
