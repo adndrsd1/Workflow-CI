@@ -19,6 +19,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
+mlflow.set_experiment("CI Training")
 mlflow.sklearn.autolog(log_models=True)
 
 model = RandomForestClassifier(
